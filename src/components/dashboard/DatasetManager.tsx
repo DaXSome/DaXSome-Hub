@@ -8,14 +8,15 @@ import { Button } from "@/components/ui/button";
 
 interface Props {
   databases: string[];
+  collections: string[];
 }
 
-export default function DatasetManager({ databases }: Props) {
+export default function DatasetManager({ databases, collections }: Props) {
   const [selectedDatabase, setSelectedDatabase] = useState<string | null>(
     databases[0],
   );
   const [selectedCollection, setSelectedCollection] = useState<string | null>(
-    null,
+    collections[0],
   );
   const [tableData, setTableData] = useState<any[]>([]);
 
@@ -40,6 +41,8 @@ export default function DatasetManager({ databases }: Props) {
         />
         {selectedDatabase && (
           <CollectionSelector
+            selectedCollection={selectedCollection!}
+            initialCollections={collections}
             database={selectedDatabase}
             onSelect={setSelectedCollection}
           />

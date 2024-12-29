@@ -19,22 +19,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const mockCollections: Record<string, string[]> = {
-  "Database 1": ["Collection 1", "Collection 2"],
-  "Database 2": ["Collection 3", "Collection 4"],
-  "Database 3": ["Collection 5", "Collection 6"],
-};
+interface Props {
+  database: string;
+  initialCollections: string[];
+  selectedCollection: string;
+  onSelect: (collection: string) => void;
+}
 
 export function CollectionSelector({
   database,
+  selectedCollection,
+  initialCollections,
   onSelect,
-}: {
-  database: string;
-  onSelect: (collection: string) => void;
-}) {
-  const [collections, setCollections] = useState(
-    mockCollections[database] || [],
-  );
+}: Props) {
+  const [collections, setCollections] = useState(initialCollections);
   const [newCollectionName, setNewCollectionName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -53,7 +51,7 @@ export function CollectionSelector({
     <div className="space-y-2">
       <Label htmlFor="collection-select">Select Collection</Label>
       <div className="flex space-x-2">
-        <Select onValueChange={onSelect}>
+        <Select value={selectedCollection} onValueChange={onSelect}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a collection" />
           </SelectTrigger>
