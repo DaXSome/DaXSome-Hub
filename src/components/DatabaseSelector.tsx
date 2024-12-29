@@ -19,14 +19,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const mockDatabases = ["Database 1", "Database 2", "Database 3"];
+interface Props {
+  initalDatabases: string[];
+  selectedDatabase: string;
+  onSelect: (database: string) => void;
+}
 
 export function DatabaseSelector({
+  initalDatabases,
+  selectedDatabase,
   onSelect,
-}: {
-  onSelect: (database: string) => void;
-}) {
-  const [databases, setDatabases] = useState(mockDatabases);
+}: Props) {
+  const [databases, setDatabases] = useState(initalDatabases);
   const [newDatabaseName, setNewDatabaseName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -45,7 +49,7 @@ export function DatabaseSelector({
     <div className="space-y-2">
       <Label htmlFor="database-select">Select Database</Label>
       <div className="flex space-x-2">
-        <Select onValueChange={onSelect}>
+        <Select value={selectedDatabase} onValueChange={onSelect}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a database" />
           </SelectTrigger>
