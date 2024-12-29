@@ -18,23 +18,24 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
 
 interface Props {
   database: string;
   initialCollections: string[];
   selectedCollection: string;
-  onSelect: (collection: string) => void;
 }
 
 export function CollectionSelector({
   database,
   selectedCollection,
   initialCollections,
-  onSelect,
 }: Props) {
   const [collections, setCollections] = useState(initialCollections);
   const [newCollectionName, setNewCollectionName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
+  const router = useRouter();
 
   const handleCreateCollection = () => {
     if (collections.includes(newCollectionName)) {
@@ -42,16 +43,22 @@ export function CollectionSelector({
     }
 
     setCollections([...collections, newCollectionName]);
-    onSelect(newCollectionName);
     setNewCollectionName("");
     setIsOpen(false);
+  };
+
+  const onSelect = (value: string) => {
+    router.push(`?database=${database}&collection=${value}`);
   };
 
   return (
     <div className="space-y-2">
       <Label htmlFor="collection-select">Select Collection</Label>
       <div className="flex space-x-2">
-        <Select value={selectedCollection} onValueChange={onSelect}>
+        <Select
+          value={selectedCollection}
+          onValueChange={onSelect}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a collection" />
           </SelectTrigger>

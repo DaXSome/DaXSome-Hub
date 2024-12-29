@@ -1,14 +1,20 @@
 import { getCollections, getDatabases } from "@/actions/dataset";
 import DatasetManager from "@/components/dashboard/DatasetManager";
 
-export default async function Page() {
+interface Props {
+  searchParams: Promise<{ database: string; collection: string }>;
+}
+
+export default async function Page({ searchParams }: Props) {
   const databases = await getDatabases();
 
   if (!databases) {
     throw new Error("failed to get databases");
   }
 
-  const collections = await getCollections(databases[0]);
+  const { database } = await searchParams;
+
+  const collections = await getCollections(database);
 
   return <DatasetManager databases={databases} collections={collections} />;
 }

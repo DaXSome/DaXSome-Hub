@@ -18,21 +18,19 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
 
 interface Props {
   initalDatabases: string[];
   selectedDatabase: string;
-  onSelect: (database: string) => void;
 }
 
-export function DatabaseSelector({
-  initalDatabases,
-  selectedDatabase,
-  onSelect,
-}: Props) {
+export function DatabaseSelector({ initalDatabases, selectedDatabase }: Props) {
   const [databases, setDatabases] = useState(initalDatabases);
   const [newDatabaseName, setNewDatabaseName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
+  const router = useRouter();
 
   const handleCreateDatabase = () => {
     if (databases.includes(newDatabaseName)) {
@@ -40,9 +38,12 @@ export function DatabaseSelector({
     }
 
     setDatabases([...databases, newDatabaseName]);
-    onSelect(newDatabaseName);
     setNewDatabaseName("");
     setIsOpen(false);
+  };
+
+  const onSelect = (value: string) => {
+    router.push(`?database=${value}`);
   };
 
   return (

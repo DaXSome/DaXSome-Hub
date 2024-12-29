@@ -5,6 +5,7 @@ import { DatabaseSelector } from "@/components/DatabaseSelector";
 import { CollectionSelector } from "@/components/CollectionSelector";
 import { DataTable } from "@/components/DataTable";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
   databases: string[];
@@ -12,19 +13,14 @@ interface Props {
 }
 
 export default function DatasetManager({ databases, collections }: Props) {
-  const [selectedDatabase, setSelectedDatabase] = useState<string | null>(
-    databases[0],
-  );
-  const [selectedCollection, setSelectedCollection] = useState<string | null>(
-    collections[0],
-  );
+  const params = useSearchParams();
+
+  const database = params.get("database") || databases[0];
+  const collection = params.get("collection") || collections[0];
+
   const [tableData, setTableData] = useState<any[]>([]);
 
   const handleSaveData = async () => {
-    if (!selectedDatabase || !selectedCollection) {
-      return;
-    }
-
     if (tableData.length === 0) {
       return;
     }
@@ -35,19 +31,18 @@ export default function DatasetManager({ databases, collections }: Props) {
       <h1 className="text-2xl font-bold mb-4">Dataset Manager</h1>
       <div className="space-y-4">
         <DatabaseSelector
-          selectedDatabase={selectedDatabase!}
+          selectedDatabase={database!}
           initalDatabases={databases}
-          onSelect={setSelectedDatabase}
         />
-        {selectedDatabase && (
+        {database && (
           <CollectionSelector
-            selectedCollection={selectedCollection!}
+            key={database}
+            selectedCollection={collection!}
             initialCollections={collections}
-            database={selectedDatabase}
-            onSelect={setSelectedCollection}
+            database={database}
           />
         )}
-        {selectedCollection && (
+        {collection && (
           <>
             <DataTable data={tableData} setData={setTableData} />
             <Button onClick={handleSaveData}>Save Data</Button>
