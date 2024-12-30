@@ -26,7 +26,15 @@ export default function DatasetManager({ databases, collections }: Props) {
       return;
     }
 
-    await saveData(database, collection, tableData);
+    const newData = tableData
+      .filter((data) => !data._id)
+      .map((data) => {
+        const { _id, ...newData } = data;
+
+        return newData;
+      });
+
+    await saveData(database, collection,newData);
 
     alert("Saved!");
   };
@@ -53,7 +61,7 @@ export default function DatasetManager({ databases, collections }: Props) {
         {collection && (
           <>
             <DataTable
-               key={`${database}-${collection}-${tableData.length}`}
+              key={`${database}-${collection}-${tableData.length}`}
               data={tableData}
               setData={setTableData}
             />
