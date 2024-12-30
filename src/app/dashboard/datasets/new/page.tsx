@@ -12,7 +12,9 @@ export default async function Page({ searchParams }: Props) {
     throw new Error("failed to get databases");
   }
 
-  const { database } = await searchParams;
+  const { database: dbParams } = await searchParams;
+
+  const database = dbParams ?? databases[0];
 
   const collections = await getCollections(database);
 

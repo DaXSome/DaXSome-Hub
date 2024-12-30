@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -113,6 +113,17 @@ export function DataTable({
       reader.readAsText(file);
     }
   };
+
+  useEffect(() => {
+    if (data.length > 0) {
+      const headers = data[0];
+      const newColumns = Object.keys(headers).map((header) => ({
+        name: header,
+        type: "String" as ColumnType,
+      }));
+      setColumns(newColumns);
+    }
+  }, [data]);
 
   return (
     <div className="space-y-4">

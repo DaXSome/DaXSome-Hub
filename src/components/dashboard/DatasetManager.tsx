@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DatabaseSelector } from "@/components/DatabaseSelector";
 import { CollectionSelector } from "@/components/CollectionSelector";
 import { DataTable } from "@/components/DataTable";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
+import { getData } from "@/actions/dataset";
 
 interface Props {
   databases: string[];
@@ -26,6 +27,12 @@ export default function DatasetManager({ databases, collections }: Props) {
     }
   };
 
+  useEffect(() => {
+    getData(database, collection).then((data) => {
+      setTableData(data);
+    });
+  }, [database, collection]);
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Dataset Manager</h1>
@@ -44,7 +51,11 @@ export default function DatasetManager({ databases, collections }: Props) {
         )}
         {collection && (
           <>
-            <DataTable data={tableData} setData={setTableData} />
+            <DataTable
+              key={`${database}-${collection}`}
+              data={tableData}
+              setData={setTableData}
+            />
             <Button onClick={handleSaveData}>Save Data</Button>
           </>
         )}
