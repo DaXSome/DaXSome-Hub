@@ -21,6 +21,7 @@ export default function AuthPage() {
     try {
       router.push("/dashboard");
     } catch (err) {
+      console.log(err)
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
