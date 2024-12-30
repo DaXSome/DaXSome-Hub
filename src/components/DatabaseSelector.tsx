@@ -21,12 +21,11 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 
 interface Props {
-  initalDatabases: string[];
+  databases: string[];
   selectedDatabase: string;
 }
 
-export function DatabaseSelector({ initalDatabases, selectedDatabase }: Props) {
-  const [databases, setDatabases] = useState(initalDatabases);
+export function DatabaseSelector({ databases, selectedDatabase }: Props) {
   const [newDatabaseName, setNewDatabaseName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -37,7 +36,8 @@ export function DatabaseSelector({ initalDatabases, selectedDatabase }: Props) {
       return;
     }
 
-    setDatabases([...databases, newDatabaseName]);
+    router.push(`?database=${newDatabaseName}`);
+
     setNewDatabaseName("");
     setIsOpen(false);
   };

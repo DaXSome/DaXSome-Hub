@@ -12,11 +12,19 @@ export default async function Page({ searchParams }: Props) {
     throw new Error("failed to get databases");
   }
 
-  const { database: dbParams } = await searchParams;
+  const params = await searchParams;
 
-  const database = dbParams ?? databases[0];
+  const database = params.database ?? databases[0];
 
   const collections = await getCollections(database);
+
+  if (params.database && !databases.includes(params.database)) {
+    databases.push(params.database);
+  }
+
+  if (params.collection && !collections.includes(params.collection)) {
+    collections.push(params.collection);
+  }
 
   return <DatasetManager databases={databases} collections={collections} />;
 }

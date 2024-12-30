@@ -6,7 +6,7 @@ import { CollectionSelector } from "@/components/CollectionSelector";
 import { DataTable } from "@/components/DataTable";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
-import { getData } from "@/actions/dataset";
+import { getData, saveData } from "@/actions/dataset";
 
 interface Props {
   databases: string[];
@@ -25,6 +25,11 @@ export default function DatasetManager({ databases, collections }: Props) {
     if (tableData.length === 0) {
       return;
     }
+
+    await saveData(database, collection, tableData);
+
+
+    alert("Saved!")
   };
 
   useEffect(() => {
@@ -37,15 +42,12 @@ export default function DatasetManager({ databases, collections }: Props) {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Dataset Manager</h1>
       <div className="space-y-4">
-        <DatabaseSelector
-          selectedDatabase={database!}
-          initalDatabases={databases}
-        />
+        <DatabaseSelector selectedDatabase={database!} databases={databases} />
         {database && (
           <CollectionSelector
             key={database}
             selectedCollection={collection!}
-            initialCollections={collections}
+            collections={collections}
             database={database}
           />
         )}

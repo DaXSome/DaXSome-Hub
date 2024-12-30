@@ -22,16 +22,15 @@ import { useRouter } from "next/navigation";
 
 interface Props {
   database: string;
-  initialCollections: string[];
+  collections: string[];
   selectedCollection: string;
 }
 
 export function CollectionSelector({
   database,
   selectedCollection,
-  initialCollections,
+  collections,
 }: Props) {
-  const [collections, setCollections] = useState(initialCollections);
   const [newCollectionName, setNewCollectionName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -42,7 +41,8 @@ export function CollectionSelector({
       return;
     }
 
-    setCollections([...collections, newCollectionName]);
+    router.push(`?database=${database}&collection=${newCollectionName}`);
+
     setNewCollectionName("");
     setIsOpen(false);
   };
@@ -55,10 +55,7 @@ export function CollectionSelector({
     <div className="space-y-2">
       <Label htmlFor="collection-select">Select Collection</Label>
       <div className="flex space-x-2">
-        <Select
-          value={selectedCollection}
-          onValueChange={onSelect}
-        >
+        <Select value={selectedCollection} onValueChange={onSelect}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a collection" />
           </SelectTrigger>
