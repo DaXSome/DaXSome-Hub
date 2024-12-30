@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
-type ColumnType = "String" | "Number" | "Boolean" | "Date";
+type ColumnType = "string" | "number" | "boolean" | "date";
 
 interface Column {
   name: string;
@@ -26,12 +26,19 @@ export function DataTable({
   data: any[];
   setData: (data: any[]) => void;
 }) {
-  const [columns, setColumns] = useState<Column[]>([]);
+  const [columns, setColumns] = useState<Column[]>(
+    data.length === 0
+      ? []
+      : Object.keys(data[0]).map(
+          (name) =>
+            ({ name, type: typeof data[0][name] as ColumnType }) as Column,
+        ),
+  );
 
   const addColumn = () => {
     const newColumn: Column = {
       name: `Column ${columns.length + 1}`,
-      type: "String",
+      type: "string",
     };
     setColumns([...columns, newColumn]);
     setData(data.map((row) => ({ ...row, [newColumn.name]: "" })));
@@ -80,8 +87,29 @@ export function DataTable({
   };
 
   const updateCell = (rowIndex: number, columnName: string, value: string) => {
+    const column = columns.find((col) => col.name === columnName);
+
+    if (!column) return;
+
+    let newValue;
+
+    switch (column.type) {
+      case "string":
+        newValue = value;
+        break;
+      case "number":
+        newValue = parseFloat(value);
+        break;
+      case "boolean":
+        newValue = value === "true";
+        break;
+      case "date":
+        newValue = new Date(value);
+        break;
+    }
+
     const newData = [...data];
-    newData[rowIndex] = { ...newData[rowIndex], [columnName]: value };
+    newData[rowIndex] = { ...newData[rowIndex], [columnName]: newValue };
     setData(newData);
   };
 
@@ -113,17 +141,6 @@ export function DataTable({
       reader.readAsText(file);
     }
   };
-
-  useEffect(() => {
-    if (data.length > 0) {
-      const headers = data[0];
-      const newColumns = Object.keys(headers).map((header) => ({
-        name: header,
-        type: "String" as ColumnType,
-      }));
-      setColumns(newColumns);
-    }
-  }, [data]);
 
   return (
     <div className="space-y-4">
@@ -161,10 +178,10 @@ export function DataTable({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="String">String</SelectItem>
-                      <SelectItem value="Number">Number</SelectItem>
-                      <SelectItem value="Boolean">Boolean</SelectItem>
-                      <SelectItem value="Date">Date</SelectItem>
+                      <SelectItem value="string">String</SelectItem>
+                      <SelectItem value="number">Number</SelectItem>
+                      <SelectItem value="boolean">Boolean</SelectItem>
+                      <SelectItem value="date">Date</SelectItem>
                     </SelectContent>
                   </Select>
                   <Button

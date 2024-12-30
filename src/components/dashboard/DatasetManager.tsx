@@ -28,8 +28,7 @@ export default function DatasetManager({ databases, collections }: Props) {
 
     await saveData(database, collection, tableData);
 
-
-    alert("Saved!")
+    alert("Saved!");
   };
 
   useEffect(() => {
@@ -54,7 +53,7 @@ export default function DatasetManager({ databases, collections }: Props) {
         {collection && (
           <>
             <DataTable
-              key={`${database}-${collection}`}
+               key={`${database}-${collection}-${tableData.length}`}
               data={tableData}
               setData={setTableData}
             />

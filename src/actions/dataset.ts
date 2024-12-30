@@ -39,6 +39,7 @@ export const getData = async (db: string, collection: string) => {
 
     return data.map((data) => ({ ...data, _id: data._id.toString() }));
   } catch (e) {
+    console.log(e)
     return [];
   }
 };
