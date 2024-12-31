@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { Textarea } from "./ui/textarea";
 
 type ColumnType = "string" | "number" | "boolean" | "date";
 
@@ -200,8 +201,12 @@ export function DataTable({
             {data.map((row, rowIndex) => (
               <tr key={rowIndex}>
                 {columns.map((column, columnIndex) => (
-                  <td key={columnIndex} className="border border-gray-300 p-2">
-                    <Input
+                  <td
+                    key={columnIndex}
+                    className="w-full border border-gray-300 p-2"
+                  >
+                    <Textarea
+                      className="relative focus:h-60 focus:w-60 w-50 h-50 transition-all resize-none overflow-hidden"
                       value={row[column.name] || ""}
                       onChange={(e) =>
                         updateCell(rowIndex, column.name, e.target.value)
