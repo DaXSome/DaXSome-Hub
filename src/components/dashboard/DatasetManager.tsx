@@ -29,12 +29,14 @@ export default function DatasetManager({ databases, collections }: Props) {
     const newData = tableData
       .filter((data) => !data._id)
       .map((data) => {
-        const { _id, ...newData } = data;
+        const newData = { ...data };
+
+        delete newData._id;
 
         return newData;
       });
 
-    await saveData(database, collection,newData);
+    await saveData(database, collection, newData);
 
     alert("Saved!");
   };
