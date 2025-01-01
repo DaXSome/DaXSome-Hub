@@ -13,7 +13,7 @@ import {
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Textarea } from "./ui/textarea";
 
-type ColumnType = "string" | "number" | "boolean" | "date";
+type ColumnType = "string" | "number" | "boolean" | "date" | "array";
 
 interface Column {
   name: string;
@@ -32,7 +32,12 @@ export function DataTable({
       ? []
       : Object.keys(data[0]).map(
           (name) =>
-            ({ name, type: typeof data[0][name] as ColumnType }) as Column,
+            ({
+              name,
+              type: Array.isArray(data[0][name])
+                ? "array"
+                : (typeof data[0][name] as ColumnType),
+            }) as Column,
         ),
   );
 
@@ -106,6 +111,9 @@ export function DataTable({
         break;
       case "date":
         newValue = new Date(value);
+        break;
+      case "array":
+        newValue = value.split(",")
         break;
     }
 
@@ -181,6 +189,7 @@ export function DataTable({
                     <SelectContent>
                       <SelectItem value="string">String</SelectItem>
                       <SelectItem value="number">Number</SelectItem>
+                      <SelectItem value="array">Array</SelectItem>
                       <SelectItem value="boolean">Boolean</SelectItem>
                       <SelectItem value="date">Date</SelectItem>
                     </SelectContent>
