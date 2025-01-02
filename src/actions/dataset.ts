@@ -37,10 +37,13 @@ export const getData = async (db: string, collection: string) => {
   try {
     const data = await cursor.toArray();
 
-    return data.map((data) => ({ ...data, _id: data._id.toString() }));
+    return {
+      data: data.map((data) => ({ ...data, _id: data._id.toString() })),
+      count: await conn.db.collection(collection).countDocuments(),
+    };
   } catch (e) {
-    console.log(e)
-    return [];
+    console.log(e);
+    return { data: [], count: 0 };
   }
 };
 

@@ -20,6 +20,7 @@ export default function DatasetManager({ databases, collections }: Props) {
   const collection = params.get("collection") || collections[0];
 
   const [tableData, setTableData] = useState<any[]>([]);
+  const [count, setCount] = useState(0);
 
   const handleSaveData = async () => {
     if (tableData.length === 0) {
@@ -42,8 +43,9 @@ export default function DatasetManager({ databases, collections }: Props) {
   };
 
   useEffect(() => {
-    getData(database, collection).then((data) => {
+    getData(database, collection).then(({ data, count }) => {
       setTableData(data);
+      setCount(count);
     });
   }, [database, collection]);
 
@@ -62,6 +64,7 @@ export default function DatasetManager({ databases, collections }: Props) {
         )}
         {collection && (
           <>
+            <span className="mt-4 mb-4">{count} Documents </span>
             <DataTable
               key={`${database}-${collection}-${tableData.length}`}
               data={tableData}
