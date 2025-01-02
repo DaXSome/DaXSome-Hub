@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,10 @@ export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    router.replace("/dashboard/datasets/new");
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -21,7 +25,7 @@ export default function AuthPage() {
     try {
       router.push("/dashboard");
     } catch (err) {
-      console.log(err)
+      console.log(err);
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -31,7 +35,9 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <Card className="w-full max-w-md p-8">
-        <h1 className="text-2xl font-bold mb-6 text-center">Login to DaXSome Hub</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">
+          Login to DaXSome Hub
+        </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Input
