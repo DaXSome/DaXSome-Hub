@@ -5,7 +5,7 @@ import { DatabaseSelector } from "@/components/DatabaseSelector";
 import { CollectionSelector } from "@/components/CollectionSelector";
 import { DataTable } from "@/components/DataTable";
 import { Button } from "@/components/ui/button";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getData, saveData } from "@/actions/dataset";
 
 interface Props {
@@ -15,12 +15,21 @@ interface Props {
 
 export default function DatasetManager({ databases, collections }: Props) {
   const params = useSearchParams();
+  const router = useRouter();
 
   const database = params.get("database") || databases[0];
   const collection = params.get("collection") || collections[0];
 
   const [tableData, setTableData] = useState<any[]>([]);
   const [count, setCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const loadData = async () => {
+    const { data, count } = await getData(database, collection);
+
+    setTableData(data);
+    setCount(count);
+  };
 
   const handleSaveData = async () => {
     if (tableData.length === 0) {
@@ -37,16 +46,18 @@ export default function DatasetManager({ databases, collections }: Props) {
         return newData;
       });
 
+    setIsLoading(true);
+
     await saveData(database, collection, newData);
 
-    alert("Saved!");
+    await loadData()
+
+    setIsLoading(false);
+
   };
 
   useEffect(() => {
-    getData(database, collection).then(({ data, count }) => {
-      setTableData(data);
-      setCount(count);
-    });
+    loadData();
   }, [database, collection]);
 
   return (
@@ -70,7 +81,9 @@ export default function DatasetManager({ databases, collections }: Props) {
               data={tableData}
               setData={setTableData}
             />
-            <Button onClick={handleSaveData}>Save Data</Button>
+            <Button disabled={isLoading} onClick={handleSaveData}>
+              Save Data
+            </Button>
           </>
         )}
       </div>
