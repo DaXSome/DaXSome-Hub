@@ -14,7 +14,7 @@ export default function AuthPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace("/dashboard/datasets/new");
+    router.replace("/dashboard/datasets");
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
